@@ -19,7 +19,7 @@ INSERT INTO icc_world_cup values('Aus','India','India');
 team_name, no_of_matches_played , no_of_wins , no_of_losses */
 
 select * from icc_world_cup ;
-
+ 
 Select winner, Team_1 from  icc_world_cup
 UNION 
 Select winner, Team_2 from  icc_world_cup
@@ -32,15 +32,28 @@ Select Team_2 , winner,
 case when team_2 = winner then 1 else 0 end as win
 from  icc_world_cup
 ;
+SELECT 
+    team_name,
+    COUNT(*) AS no_of_matches_played,
+    SUM(CASE WHEN team_name = winner THEN 1 ELSE 0 END) AS no_of_wins,
+    SUM(CASE WHEN team_name != winner THEN 1 ELSE 0 END) AS no_of_losses
+FROM (
+    -- Create a virtual column `team_name` from both team_1 and team_2
+    SELECT team_1 AS team_name, winner FROM icc_world_cup
+    UNION ALL
+    SELECT team_2 AS team_name, winner FROM icc_world_cup
+) AS all_matches
+GROUP BY team_name
+ORDER BY team_name;
 
 
 /* 2- write a query to print first name and last name of a customer using orders table(everything after first space can be considered as last name)
 customer_name, first_name, last_name*/
 
-
-
-
-
+Select Left(name,CHARINDEX(' ',name)-1 )as First_name,
+Substring(name,Charindex(' ', name)+1, len(name)) as last_name 
+from orders
+WHERE CHARINDEX(' ', name) > 0;
 
 
 --Run below script to create drivers table:
